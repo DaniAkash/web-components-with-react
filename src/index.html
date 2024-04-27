@@ -4,23 +4,130 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Web Components with React</title>
-    <link rel="stylesheet" href="/node_modules/reveal.js/dist/reveal.css">
-    <link rel="stylesheet" href="/node_modules/reveal.js/dist/theme/black.css">
+    <link rel="stylesheet" href="https://esm.sh/reveal.js/dist/reveal.css">
+    <link rel="stylesheet" href="https://esm.sh/reveal.js/dist/theme/black.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release/build/styles/default.min.css"> <!-- Highlight.js style -->
+    <!-- Additional stylesheet for custom animations and smaller text -->
+    <style>
+        h1, h2 {
+            font-size: 1em; /* Adjusted font size for better visibility */
+        }
+        .slide-right {
+            transform: translateX(-100px);
+            opacity: 0;
+            transition: all 0.7s ease-out;
+        }
+        .reveal .slides section.present .slide-right {
+            transform: translateX(0);
+            opacity: 1;
+        }
+        .fade-in {
+            opacity: 0;
+            transition: opacity 0.7s ease-in;
+        }
+        .reveal .slides section.present .fade-in {
+            opacity: 1;
+        }
+        .highlight {
+            background-color: yellow; /* Highlight style */
+        }
+    </style>
 </head>
 <body>
     <div class="reveal">
         <div class="slides">
-            <section>Introduction to web components</section>
+            <section>
+                <h2>Building Web Components with React</h2>
+            </section>
+            <section>
+                <h2>What are web components?</h2>
+                <p class="slide-right">Native web technologies for building components</p>
+            </section>
+            <section>
+                <h2>Key concepts</h2>
+                <ul class="fade-in">
+                    <li><a href="https://developer.mozilla.org/en-US/docs/Web/Web_Components/Using_custom_elements">Custom Elements</a></li>
+                    <li><a href="https://developer.mozilla.org/en-US/docs/Web/Web_Components/Using_shadow_DOM">Shadow DOM</a></li>
+                    <li><a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/template">HTML Templates</a></li>
+                </ul>
+            </section>
+            <section>
+                <h2>A simple custom element:</h2>
+                <pre><code class="js slide-right">
+class SimpleGreeting extends HTMLElement {
+    #shadowRoot
+
+    constructor() {
+        super();  // Always call super() first in the constructor.
+        this.#shadowRoot = this.attachShadow({mode: 'open'});  // Attach a shadow root to the element.
+    }
+
+    connectedCallback() {
+        const style = `<style>p { color: red; }</style>`;
+        const content = `<p>Hello, ${this.getAttribute('name')}!</p>`;
+        this.#shadowRoot.innerHTML = style + content;
+    }
+}
+
+customElements.define('simple-greeting', SimpleGreeting);
+                </code></pre>
+            </section>
+            <section>
+                Custom Element Lifecycle!
+            </section>
+            <section>
+                <pre>
+                    <code class="js">class LifecycleExample extends HTMLElement {
+  constructor() {
+    super();
+  }
+
+  connectedCallback() {
+    // called when the element is attached to the document
+    // similar to React's "componentDidMount"
+  }
+
+  disconnectedCallback() {
+    // called on removal
+    // similar to React's "componentWillUnmount"
+  }
+
+  attributeChangedCallback(attribute, previousValue, currentValue) {
+    // called when attributes are added, removed, or changed
+  }
+
+  static get observedAttributes() {
+    return ["src"]
+  }
+
+}</code>
+                </pre>
+            </section>
         </div>
     </div>
+    <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release/build/highlight.min.js"></script>
     <script type="module">
         import Reveal from 'https://esm.sh/reveal.js';
         import Markdown from 'https://esm.sh/reveal.js/plugin/markdown/markdown.esm.js';
 
-        let deck = new Reveal({
-            plugins: [ Markdown ]
-        })
+        const deck = new Reveal({
+            plugins: [Markdown],
+            transition: 'slide', // none/fade/slide/convex/concave/zoom
+            transitionSpeed: 'fast', // default/fast/slow
+            backgroundTransition: 'fade',
+            viewDistance: 3,
+            progress: false, // Hides the progress bar at the bottom
+            hash: true, // Updates the URL hash to include the slide number (e.g., #/3)
+            dependencies: [
+                { src: 'https://esm.sh/reveal.js/plugin/highlight/highlight.js', async: true, callback: function() { hljs.highlightAll(); } }
+            ]
+        });
         deck.initialize();
+
+        // Initialize Highlight.js
+        document.addEventListener('DOMContentLoaded', (event) => {
+            hljs.highlightAll();
+        });
     </script>
 </body>
 </html>

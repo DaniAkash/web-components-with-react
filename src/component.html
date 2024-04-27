@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Component</title>
+</head>
+<body>
+    <simple-greeting name="Web Components"></simple-greeting>
+    <p>Hello World!</p>
+    <script>
+        class SimpleGreeting extends HTMLElement {
+            #shadowRoot
+
+            static observedAttributes = ['name'];
+
+            constructor() {
+                super();  // Always call super() first in the constructor.
+                this.#shadowRoot = this.attachShadow({mode: 'closed'});  // Attach a shadow root to the element.
+            }
+
+            attributeChangedCallback(attribute, previousValue, currentValue) {
+                if (attribute === 'name') {
+                    this.connectedCallback();
+                }
+            }
+
+            connectedCallback() {
+                const style = `<style>p { color: red; }</style>`;
+                const content = `<p>Hello, ${this.getAttribute('name')}!</p>`;
+                this.#shadowRoot.innerHTML = style + content;
+            }
+        }
+
+        customElements.define('simple-greeting', SimpleGreeting);
+    </script>
+
+    <script>
+        const $greeting = document.querySelector("simple-greeting")
+        setTimeout(() => {
+            $greeting.setAttribute("name", "React");
+        }, 3000)
+    </script>
+</body>
+</html>
