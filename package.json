@@ -1,0 +1,11 @@
+{
+  "name": "web-components-with-react",
+  "version": "1.0.0",
+  "description": "slides for web component talk",
+  "main": "index.html",
+  "scripts": {
+    "start": "npx -y http-server src/"
+  },
+  "author": "DaniAkash",
+  "license": "ISC"
+}
