@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>React Component</title>
+</head>
+<body>
+    <custom-dialog-box></custom-dialog-box>
+    <script type="module">
+        import React, { useState } from 'https://esm.sh/react';
+        import ReactDOM from 'https://esm.sh/react-dom';
+
+        const DialogBoxComponent = () => {
+            const [isOpen, setIsOpen] = useState(false);  // State to manage dialog visibility
+
+            const openDialog = () => setIsOpen(true);  // Function to open the dialog
+            const closeDialog = () => setIsOpen(false);  // Function to close the dialog
+
+            return React.createElement(
+                'div',
+                null,
+                React.createElement('button', { onClick: openDialog }, 'Open Dialog'),
+                React.createElement('dialog', { open: isOpen },
+                    React.createElement('p', null, 'This is a simple dialog box.'),
+                    React.createElement('button', { onClick: closeDialog }, 'Close')
+                )
+            );
+        }
+
+        class DialogBox extends HTMLElement {
+            #shadowRoot;
+
+            constructor() {
+                super();
+                this.#shadowRoot = this.attachShadow({mode: 'open'})
+            }
+
+            connectedCallback() {
+                ReactDOM.render(
+                    React.createElement(
+                        React.StrictMode,
+                        null,
+                        React.createElement(DialogBoxComponent),
+                    ),
+                    this.#shadowRoot
+                );
+            }
+        }
+        customElements.define('custom-dialog-box', DialogBox)
+    </script>
+</body>
+</html>
